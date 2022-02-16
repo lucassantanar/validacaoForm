@@ -51,9 +51,13 @@ export default function Home() {
             password: '',
           }}
           validationSchema={FormSchema}
+          onSubmit={(values, actions) => {
+            console.log(JSON.stringify(values, null, 2));
+          }}
         >
           {({values, handleChange, handleSubmit, errors}) => (
             <form onSubmit={handleSubmit}>
+              {console.log(values)}
               {/* <p>Usuários</p>
               <input 
                 ref={user}
@@ -63,6 +67,7 @@ export default function Home() {
 
                 <div className={classes.root}>
                   <TextField
+                    type='text'
                     error={errors.user}
                     id="outlined-error-user-text"
                     label="User"
@@ -73,7 +78,6 @@ export default function Home() {
                     variant="outlined"
                   />
                 </div>
-                {errors.user ? <p>{errors.user}</p> : null}
               {/* <p>Senha</p>
               <input 
                 ref={password}
@@ -93,12 +97,13 @@ export default function Home() {
                     variant="outlined"
                   />
                 </div>
-                {errors.password ? <p>{errors.password}</p> : null}
               {/* {errors.user || errors.password ? <p style={{color: 'red'}}>{errors.user}</p> : <p style={{color: 'red'}}>{errors.password}</p>} */}
               <p>
                 <button title="Entrar" type="submit">Entrar</button>
               </p>
             </form>
+
+            
           )}
         </Formik>
       </main>
