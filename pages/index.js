@@ -1,8 +1,41 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import * as yup from "yup";
+import { useEffect, useRef } from "react";
+import { Formik } from "formik";
+import { makeStyles, TextField } from "@material-ui/core";
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: 200,
+    },
+  },
+}));
+
 
 export default function Home() {
+  const user = useRef(null);
+  const password = useRef(null);
+  const classes = useStyles();
+  
+  const FormSchema = yup.object().shape({
+    user: yup
+        .string()
+        .strict()
+        .required('Campo obrigatório!'),
+    password: yup
+        .string()
+        .required('Campo obrigatório!')
+        .min(4, 'Digite pelo menos 4 caracteres')
+  });
+
+  useEffect(() => {
+
+  });
+
   return (
     <div className={styles.container}>
       <Head>
@@ -12,58 +45,63 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Formik
+          initialValues={{
+            user: '',
+            password: '',
+          }}
+          validationSchema={FormSchema}
         >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+          {({values, handleChange, handleSubmit, errors}) => (
+            <form onSubmit={handleSubmit}>
+              {/* <p>Usuários</p>
+              <input 
+                ref={user}
+                defaultValue={values.user}
+                onChangeText={handleChange('user')}
+              /> */}
+
+                <div className={classes.root}>
+                  <TextField
+                    error={errors.user}
+                    id="outlined-error-user-text"
+                    label="User"
+                    helperText={errors.user}
+                    ref={user}
+                    defaultValue={errors.user}
+                    onChange={handleChange('user')}
+                    variant="outlined"
+                  />
+                </div>
+                {errors.user ? <p>{errors.user}</p> : null}
+              {/* <p>Senha</p>
+              <input 
+                ref={password}
+                defaultValue={values.password}
+                onChangeText={handleChange('password')}
+              /> */}
+              <p></p>
+                <div className={classes.root}>
+                  <TextField
+                    error={errors.password}
+                    id="outlined-error-senha-text"
+                    label="Senha"
+                    helperText={errors.password}
+                    ref={password}
+                    defaultValue={values.password}
+                    onChange={handleChange('password')}
+                    variant="outlined"
+                  />
+                </div>
+                {errors.password ? <p>{errors.password}</p> : null}
+              {/* {errors.user || errors.password ? <p style={{color: 'red'}}>{errors.user}</p> : <p style={{color: 'red'}}>{errors.password}</p>} */}
+              <p>
+                <button title="Entrar" type="submit">Entrar</button>
+              </p>
+            </form>
+          )}
+        </Formik>
+      </main>
     </div>
-  )
+  );
 }
